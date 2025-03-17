@@ -43,11 +43,15 @@ export default function Home() {
 
   return (
     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-      <div className="inline-block max-w-xl text-center justify-center mb-20">
+      <div className="inline-block max-w-xl text-center justify-center mb-4">
         <span className={title()}>Absolutely&nbsp;</span>
         <span className={title({ color: "violet" })}>stunning&nbsp;</span>
         <br />
         <span className={title()}>praise regardless of your skill level.</span>
+      </div>
+
+      <div className="inline-block max-w-xl text-center justify-center mb-20 text-gray-500">
+        <i>Are you feeling a crushing sense of inadequacy? Do you struggle to muster even a faint glimmer of self-confidence? Well, you're at the right place!</i>
       </div>
 
       <div className="flex flex-col w-full items-center">
@@ -65,7 +69,7 @@ export default function Home() {
           disabled={isFetching}
           onPress={handleFetchClick}
         >
-          Fetch
+          Praise Me!
         </Button>
       </div>
       {error && <p className="text-red-500">{error}</p>}
