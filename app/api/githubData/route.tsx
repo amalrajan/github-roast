@@ -116,7 +116,7 @@ Top Languages: ${sortedLanguages.join(", ")}
           messages: [
             {
               role: "user",
-              content: `Write 2 separate paragraphs of praise about this person based on their GitHub stats. Add a touch of sarcasm and humor:\n\n${summary}`,
+              content: `Write 2 separate paragraphs about this person based on their GitHub stats. Make it extremely sarcastic and hilarious.:\n\n${summary}`,
             },
           ],
           temperature: 0.7,

@@ -51,7 +51,7 @@ export default function Home() {
       </div>
 
       <div className="inline-block max-w-xl text-center justify-center mb-20 text-gray-500">
-        <i>Are you feeling a crushing sense of inadequacy? Do you struggle to muster even a faint glimmer of self-confidence? Well, you're at the right place!</i>
+        <i>Are you feeling a crushing sense of inadequacy? Do you struggle to muster even a faint glimmer of self-confidence? Well, you&apos;re at the right place!</i>
       </div>
 
       <div className="flex flex-col w-full items-center">
