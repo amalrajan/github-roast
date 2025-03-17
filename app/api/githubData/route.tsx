@@ -8,15 +8,17 @@ export async function POST(request: Request) {
   try {
     // Read the username from the request body.
     const { username } = (await request.json()) as GithubDataRequestBody;
+
     if (!username) {
       return NextResponse.json(
         { error: "Username is required." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     // Use server-only environment variables.
     const githubToken = process.env.GITHUB_TOKEN;
+
     if (!githubToken) throw new Error("GitHub token is not configured.");
 
     // Fetch GitHub user data.
@@ -27,14 +29,15 @@ export async function POST(request: Request) {
           Authorization: `token ${githubToken}`,
           "User-Agent": "request",
         },
-      }
+      },
     );
 
     if (!userResponse.ok) {
       const errorDetails = await userResponse.text();
+
       return NextResponse.json(
         { error: `GitHub API Error: ${userResponse.status} - ${errorDetails}` },
-        { status: userResponse.status }
+        { status: userResponse.status },
       );
     }
     const userData = await userResponse.json();
@@ -49,9 +52,12 @@ export async function POST(request: Request) {
 
     if (!reposResponse.ok) {
       const errorDetails = await reposResponse.text();
+
       return NextResponse.json(
-        { error: `GitHub Repos API Error: ${reposResponse.status} - ${errorDetails}` },
-        { status: reposResponse.status }
+        {
+          error: `GitHub Repos API Error: ${reposResponse.status} - ${errorDetails}`,
+        },
+        { status: reposResponse.status },
       );
     }
     const reposData = await reposResponse.json();
@@ -69,6 +75,7 @@ export async function POST(request: Request) {
 
       if (langResponse.ok) {
         const languages = await langResponse.json();
+
         for (const lang in languages) {
           langCounts[lang] = (langCounts[lang] || 0) + languages[lang];
         }
@@ -95,13 +102,14 @@ Followers: ${userData.followers}
 Following: ${userData.following}
 Public Repos: ${userData.public_repos}
 Top Repositories: ${topRepos
-        .map((repo: any) => `${repo.name} (${repo.stargazers_count} stars)`)
-        .join(", ")}
+      .map((repo: any) => `${repo.name} (${repo.stargazers_count} stars)`)
+      .join(", ")}
 Top Languages: ${sortedLanguages.join(", ")}
     `.trim();
 
     // Optional: Send the summary to Groq.
     const groqApiKey = process.env.GROQ_API_KEY;
+
     if (groqApiKey) {
       const groqEndpoint = "https://api.groq.com/openai/v1/chat/completions";
 
@@ -125,15 +133,18 @@ Top Languages: ${sortedLanguages.join(", ")}
 
       if (!groqResponse.ok) {
         const errorDetails = await groqResponse.text();
+
         return NextResponse.json(
           { error: `Groq API Error: ${groqResponse.status} - ${errorDetails}` },
-          { status: groqResponse.status }
+          { status: groqResponse.status },
         );
       }
       const groqData = await groqResponse.json();
 
       // Return the result from Groq.
-      return NextResponse.json({ summary: groqData.choices[0].message.content });
+      return NextResponse.json({
+        summary: groqData.choices[0].message.content,
+      });
     }
 
     // If Groq is not called, return the generated summary directly.

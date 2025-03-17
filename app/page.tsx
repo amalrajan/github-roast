@@ -1,11 +1,12 @@
 "use client";
 
-import { title } from "@/components/primitives";
-import { Button, Input, Spinner } from "@heroui/react";
+import { Button, Image, Input, Spinner } from "@heroui/react";
 import { useState } from "react";
 
+import { title } from "@/components/primitives";
+
 export default function Home() {
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState("theprimeagen");
   const [error, setError] = useState("");
   const [isFetching, setIsFetching] = useState(false);
   const [result, setResult] = useState("");
@@ -17,6 +18,7 @@ export default function Home() {
   const handleFetchClick = async () => {
     if (!username) {
       setError("Please enter a GitHub username.");
+
       return;
     }
     setIsFetching(true);
@@ -29,6 +31,7 @@ export default function Home() {
         body: JSON.stringify({ username }),
       });
       const data = await res.json();
+
       if (res.ok) {
         setResult(data.summary);
       } else {
@@ -50,9 +53,25 @@ export default function Home() {
         <span className={title()}>praise regardless of your skill level.</span>
       </div>
 
-      <div className="inline-block max-w-xl text-center justify-center mb-20 text-gray-500">
-        <i>Are you feeling a crushing sense of inadequacy? Do you struggle to muster even a faint glimmer of self-confidence? Well, you&apos;re at the right place!</i>
+      <div className="inline-block max-w-xl text-center justify-center mb-10 text-gray-500">
+        <i>
+          Are you feeling a crushing sense of inadequacy? Do you struggle to
+          muster even a faint glimmer of self-confidence? Well, you&apos;re at
+          the right place!
+        </i>
       </div>
+      {username && (
+        <div className="mb-10 flex justify-center items-center">
+          <Image
+            isBlurred
+            alt="HeroUI Album Cover"
+            className="max-w-xl w-full m-5"
+            radius="full"
+            src={`https://github.com/${username}.png`}
+            width="70%"
+          />
+        </div>
+      )}
 
       <div className="flex flex-col w-full items-center">
         <Input
@@ -65,7 +84,7 @@ export default function Home() {
         />
         <Button
           className="max-w-xl w-full mt-4"
-          color="primary"
+          color="secondary"
           disabled={isFetching}
           onPress={handleFetchClick}
         >
@@ -78,8 +97,9 @@ export default function Home() {
           <Spinner size="lg" />
         </div>
       )}
+
       {result && (
-        <div className="max-w-xl w-full mt-4 p-4 border rounded">
+        <div className="max-w-xl w-full mt-4 p-4 rounded text-gray-600 text-sm leading-relaxed text-justify">
           {result}
         </div>
       )}
