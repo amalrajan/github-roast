@@ -3,8 +3,7 @@
 Try it here: [github-roast.amalrajan.com](https://github-roast.amalrajan.com/)
 
 
-
-https://github.com/user-attachments/assets/32efddd2-05d3-4f5f-a0ed-82ca11959595
+https://github.com/user-attachments/assets/d6800090-1f36-44fc-b2d7-c540d7677b61
 
 ## Technologies Used
 
