@@ -82,11 +82,12 @@ export async function POST(request: Request) {
       }
     }
 
-    // Generate a summary.
+    // Get the top 20 repositories by stars.
     const topRepos = reposData
       .sort((a: any, b: any) => b.stargazers_count - a.stargazers_count)
-      .slice(0, 5);
+      .slice(0, 20);
 
+    // Get the top 3 languages by usage.
     const sortedLanguages = Object.entries(langCounts)
       .sort(([, countA], [, countB]) => (countB as number) - (countA as number))
       .slice(0, 3)
@@ -101,13 +102,10 @@ Location: ${userData.location || "N/A"}
 Followers: ${userData.followers}
 Following: ${userData.following}
 Public Repos: ${userData.public_repos}
-Top Repositories: ${topRepos
-      .map((repo: any) => `${repo.name} (${repo.stargazers_count} stars)`)
-      .join(", ")}
+Top Repositories: ${topRepos.map((repo: any) => `${repo.name}`).join(", ")}
 Top Languages: ${sortedLanguages.join(", ")}
     `.trim();
 
-    // Optional: Send the summary to Groq.
     const groqApiKey = process.env.GROQ_API_KEY;
 
     if (groqApiKey) {
@@ -124,7 +122,7 @@ Top Languages: ${sortedLanguages.join(", ")}
           messages: [
             {
               role: "user",
-              content: `Write 2 separate paragraphs about this person based on their GitHub stats. Make it extremely sarcastic and hilarious.:\n\n${summary}`,
+              content: `Write a scathing, sarcastic, two-paragraph speech like roast of this GitHub user based on their stats. In the first paragraph, utterly annihilate their bio, location, and follower/following count - what kind of loser has that few followers? Towards the end of first paragraph and in the beginning of second paragraph, eviscerate their repositories - which ones are the most cringeworthy, and what do they say about this person's coding skills (or lack thereof)? Be ruthless. In the second paragraph, mock their top 3 programming languages (you're given those) and use them to make a broader point about their intelligence, work ethic, and overall personality. Think of the most creative ways to insult their coding abilities, problem-solving skills, and general competence as a human being. Don't hold back - we want to see a roast that's both hilarious and devastating. Go ahead, tear this GitHub user apart, and leave no stone unturned in your ridicule.:\n\n${summary}`,
             },
           ],
           temperature: 0.7,

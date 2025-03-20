@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, Image, Input, Spinner } from "@heroui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { title } from "@/components/primitives";
 
@@ -10,8 +10,31 @@ export default function Home() {
   const [error, setError] = useState("");
   const [isFetching, setIsFetching] = useState(false);
   const [result, setResult] = useState("");
+  const [displayedText, setDisplayedText] = useState("");
+
+  useEffect(() => {
+    if (result && !isFetching) {
+      let i = 0;
+
+      setDisplayedText(""); // Reset text before typing
+
+      const interval = setInterval(() => {
+        if (i <= result.length) {
+          setDisplayedText(result.substring(0, i)); // Use substring to avoid extra characters
+          i++;
+        } else {
+          clearInterval(interval);
+        }
+      }, 5); // 5ms per character
+
+      return () => clearInterval(interval); // Clean up on unmount
+    }
+  }, [result, isFetching]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value == "") {
+      setUsername("theprimeagen");
+    }
     setUsername(e.target.value);
   };
 
@@ -53,22 +76,20 @@ export default function Home() {
         <span className={title()}>praise regardless of your skill level.</span>
       </div>
 
-      <div className="inline-block max-w-xl text-center justify-center mb-10 text-gray-500">
-        <i>
-          Are you feeling a crushing sense of inadequacy? Do you struggle to
-          muster even a faint glimmer of self-confidence? Well, you&apos;re at
-          the right place!
-        </i>
+      <div className="inline-block max-w-xl text-center justify-center mb-10 text-gray-400">
+        Are you feeling a crushing sense of inadequacy? Do you struggle to
+        muster even a faint glimmer of self-confidence? Well, you&apos;re at the
+        right place!
       </div>
       {username && (
         <div className="mb-10 flex justify-center items-center">
           <Image
             isBlurred
-            alt="HeroUI Album Cover"
-            className="max-w-xl w-full m-5"
+            alt="GitHub Profile Picture"
+            height={300}
             radius="full"
             src={`https://github.com/${username}.png`}
-            width="70%"
+            width={300}
           />
         </div>
       )}
@@ -98,9 +119,9 @@ export default function Home() {
         </div>
       )}
 
-      {result && (
-        <div className="max-w-xl w-full mt-4 p-4 rounded text-gray-600 text-sm leading-relaxed text-justify">
-          {result}
+      {displayedText && isFetching === false && (
+        <div className="max-w-xl w-full mt-4 mb-10 p-4 rounded text-sm leading-relaxed whitespace-pre-wrap">
+          {displayedText}
         </div>
       )}
     </section>
